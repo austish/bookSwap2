@@ -1,4 +1,3 @@
-// src/types/user.ts
 export type AccountStatus = 'active' | 'banned';
 
 export interface User {

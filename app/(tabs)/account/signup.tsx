@@ -1,4 +1,3 @@
-// src/screens/SignUp/index.tsx
 import React, { useState, useEffect } from "react";
 import {
   View,

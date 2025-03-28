@@ -55,7 +55,7 @@ export default function AdminScreen() {
   };
 
   const handleUserPress = (user: User) => {
-    router.push("");
+    router.push("/(tabs)/account/userDetails/[id]");
   };
 
   return (
