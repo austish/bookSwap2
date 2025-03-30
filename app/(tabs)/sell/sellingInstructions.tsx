@@ -1,23 +1,14 @@
 // (tabs)/account/sellingInstructions.tsx
 import React from "react";
 import { View, Text, TouchableOpacity } from "react-native";
-import { useNavigation } from "@react-navigation/native";
-import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
 import { StyleSheet } from "react-native";
 import { COLORS } from "@/constants/theme";
-
-// Define your tab param list type if you want strict typing
-type TabParamList = {
-  Buy: undefined;
-  Sell: undefined;
-  Account: undefined;
-};
+import { router } from "expo-router";
 
 export default function SellingInstructionsScreen() {
-  const navigation = useNavigation<BottomTabNavigationProp<TabParamList>>();
 
-  const handleLoginPress = () => {
-    navigation.navigate("Account");
+  const handleSignupPress = () => {
+    router.replace("/(tabs)/account/signup")
   };
 
   return (
@@ -55,7 +46,7 @@ export default function SellingInstructionsScreen() {
         </Text>
       </View>
 
-      <TouchableOpacity style={styles.button} onPress={handleLoginPress}>
+      <TouchableOpacity style={styles.button} onPress={handleSignupPress}>
         <Text style={styles.buttonText}>Sign Up to Start Selling</Text>
       </TouchableOpacity>
     </View>

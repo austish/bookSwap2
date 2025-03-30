@@ -31,6 +31,11 @@ import { auth, db } from "@/firebaseConfig";
 
 type TabType = "Active" | "Pending" | "History";
 
+interface ListingManagerProps {
+    userId: string;
+    isAdmin?: string; // Changed to string to match what you're passing
+  }
+
 interface Listing {
   id: string;
   isbn: string;
@@ -46,17 +51,12 @@ interface ListingWithBook extends Listing {
   lowestPrice: number; // Added lowestPrice field
 }
 
-const ListingManager: React.FC = () => {
+const ListingManager: React.FC<ListingManagerProps> = ({ userId, isAdmin = 'false' }) => {
   const [activeTab, setActiveTab] = useState<TabType>("Active");
   const [searchQuery, setSearchQuery] = useState("");
   const [listings, setListings] = useState<ListingWithBook[]>([]);
   const [loading, setLoading] = useState(true);
   const [isUserAdmin, setIsUserAdmin] = useState(false);
-
-  const { userId, isAdmin } = useLocalSearchParams<{
-    userId?: string;
-    isAdmin?: string;
-  }>();
 
   // Helper function to get the lowest price for a book ISBN
   const fetchLowestPrice = React.useCallback(

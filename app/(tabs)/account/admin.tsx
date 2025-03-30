@@ -1,5 +1,5 @@
 // (tabs)/account/admin.tsx
-import React, {useState} from 'react';
+import React, { useState } from "react";
 import {
   SafeAreaView,
   View,
@@ -8,17 +8,17 @@ import {
   TouchableOpacity,
   ScrollView,
   ActivityIndicator,
-} from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { db } from '@/firebaseConfig';
-import {collection, query, where, getDocs} from 'firebase/firestore';
-import {User} from '@/types/user';
-import {StyleSheet} from 'react-native';
-import {COLORS, SIZES} from '@/constants/theme';
-import { router } from 'expo-router';
+} from "react-native";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import { db } from "@/firebaseConfig";
+import { collection, query, where, getDocs } from "firebase/firestore";
+import { User } from "@/types/user";
+import { StyleSheet } from "react-native";
+import { COLORS, SIZES } from "@/constants/theme";
+import { router } from "expo-router";
 
 export default function AdminScreen() {
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState<User[]>([]);
   const [loading, setLoading] = useState(false);
 
@@ -30,16 +30,16 @@ export default function AdminScreen() {
 
     setLoading(true);
     try {
-        const usersRef = collection(db, 'users');
-        const q = query(
-          usersRef,
-          where('email', '>=', searchQuery),
-          where('email', '<=', searchQuery + '\uf8ff')
-        );
-        
-        const usersSnapshot = await getDocs(q);
+      const usersRef = collection(db, "users");
+      const q = query(
+        usersRef,
+        where("email", ">=", searchQuery),
+        where("email", "<=", searchQuery + "\uf8ff")
+      );
 
-      const users = usersSnapshot.docs.map(doc => ({
+      const usersSnapshot = await getDocs(q);
+
+      const users = usersSnapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
         dateJoined: doc.data().dateJoined.toDate(),
@@ -48,14 +48,17 @@ export default function AdminScreen() {
 
       setSearchResults(users);
     } catch (error) {
-      console.error('Error searching users:', error);
+      console.error("Error searching users:", error);
     } finally {
       setLoading(false);
     }
   };
 
   const handleUserPress = (user: User) => {
-    router.push("/(tabs)/account/userDetails/[id]");
+    router.push({
+      pathname: "/(tabs)/account/userDetails/[id]",
+      params: { id: user.id},
+    });
   };
 
   return (
@@ -63,7 +66,8 @@ export default function AdminScreen() {
       <View style={styles.header}>
         <TouchableOpacity
           style={styles.backButton}
-          onPress={() => router.back()}>
+          onPress={() => router.back()}
+        >
           <Icon name="arrow-left" size={24} color={COLORS.black} />
         </TouchableOpacity>
         <Text style={styles.title}>Admin Page</Text>
@@ -87,11 +91,12 @@ export default function AdminScreen() {
         <ActivityIndicator size="large" color={COLORS.primary} />
       ) : (
         <ScrollView style={styles.resultsContainer}>
-          {searchResults.map(user => (
+          {searchResults.map((user) => (
             <TouchableOpacity
               key={user.id}
               style={styles.userItem}
-              onPress={() => handleUserPress(user)}>
+              onPress={() => handleUserPress(user)}
+            >
               <Text style={styles.userEmail}>{user.email}</Text>
               <Text style={styles.userName}>{user.displayName}</Text>
             </TouchableOpacity>
@@ -100,7 +105,7 @@ export default function AdminScreen() {
       )}
     </SafeAreaView>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -108,8 +113,8 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.white,
   },
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     paddingHorizontal: SIZES.padding.screen,
     paddingTop: SIZES.padding.medium,
     paddingBottom: SIZES.padding.medium,
@@ -121,11 +126,11 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: SIZES.fontSize.large,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     color: COLORS.primary,
   },
   searchContainer: {
-    flexDirection: 'row',
+    flexDirection: "row",
     padding: SIZES.padding.screen,
     borderBottomWidth: 1,
     borderBottomColor: COLORS.lightGray,
@@ -142,8 +147,8 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.primary,
     borderRadius: SIZES.borderRadius.small,
     padding: SIZES.padding.small,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   resultsContainer: {
     flex: 1,
@@ -156,7 +161,7 @@ const styles = StyleSheet.create({
   },
   userEmail: {
     fontSize: SIZES.fontSize.medium,
-    fontWeight: '600',
+    fontWeight: "600",
     color: COLORS.black,
   },
   userName: {

@@ -304,7 +304,7 @@ export default function CreateListingScreen() {
         [
           {
             text: "OK",
-            onPress: () => router.back,
+            onPress: () => router.back(),
           },
         ]
       );
@@ -366,7 +366,7 @@ export default function CreateListingScreen() {
         <View style={styles.header}>
           <TouchableOpacity
             style={styles.backButton}
-            onPress={() => router.back}
+            onPress={() => router.back()}
           >
             <Icon name="chevron-left" size={24} color="black" />
           </TouchableOpacity>

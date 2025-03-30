@@ -1,5 +1,5 @@
 // (tabs)/account/login.tsx
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -10,25 +10,26 @@ import {
 } from "react-native";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "@/firebaseConfig";
+import { useAuth } from "@/context/AuthContext";
 import { StyleSheet } from "react-native";
 import { COLORS, SIZES } from "@/constants/theme";
 import { router } from "expo-router";
-import InputField from '@/components/InputField';
-
-type RootStackParamList = {
-  Buy: undefined;
-  Sell: undefined;
-  Account: undefined;
-  Cart: undefined;
-  SignUp: undefined;
-  MainTabs: undefined;
-};
+import InputField from "@/components/InputField";
 
 export default function LoginScreen() {
+  const { user, isLoading: authLoading } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
+  // Redirect if already logged in
+  useEffect(() => {
+    if (user && !authLoading) {
+      // User is already logged in, redirect to the account page
+      router.replace("/");
+    }
+  }, [user, authLoading]);
 
   const validateForm = (): boolean => {
     if (!email.trim()) {
@@ -65,7 +66,6 @@ export default function LoginScreen() {
         password
       );
       console.log("User logged in successfully:", userCredential.user.uid);
-      router.push("/buy");
     } catch (error: any) {
       let errorMessage = "Failed to login. Please try again.";
 
@@ -144,7 +144,7 @@ export default function LoginScreen() {
       </View>
     </SafeAreaView>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {

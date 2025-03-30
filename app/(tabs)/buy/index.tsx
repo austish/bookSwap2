@@ -224,7 +224,10 @@ export default function BuyScreen() {
   };
 
   const handleBookPress = (isbn: string) => {
-    // router.push(`/buy/${isbn}`);
+    router.push({
+      pathname: "/(tabs)/buy/listing/[isbn]",
+      params: { isbn },
+    });
   };
 
   const handleLoadMore = () => {

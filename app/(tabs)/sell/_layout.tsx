@@ -1,50 +1,42 @@
 // (tabs)/sell/_layout.tsx
-import { Stack } from "expo-router";
-import React, { useState, useEffect } from "react";
-import { auth } from "@/firebaseConfig";
-import { onAuthStateChanged } from "firebase/auth";
+import { router, Stack } from "expo-router";
+import React, { useEffect } from "react";
+import { useAuth } from "@/context/AuthContext";
+import { View, ActivityIndicator } from "react-native";
 
 export default function SellLayout() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [initializing, setInitializing] = useState(true);
+  const { user, isLoading } = useAuth();
 
+  // Force navigation when auth state changes
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setIsLoggedIn(!!user);
-      if (initializing) {
-        setInitializing(false);
-      }
-    });
-    return unsubscribe;
-  }, [initializing]);
+    if (!isLoading && !user) {
+      router.replace("/(tabs)/sell/sellingInstructions");
+    } else if (!isLoading && user) {
+      router.replace("/(tabs)/sell");
+    }
+  }, [user, isLoading]);
 
   // Don't render anything while checking auth state
-  if (initializing) {
-    return null;
+  if (isLoading) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator size="large" />
+      </View>
+    );
   }
 
-  // Conditionally prepare the screens based on login state
-  if (!isLoggedIn) {
-    return (
-      <Stack
-        screenOptions={{
-          headerShown: false,
-          animation: "slide_from_right",
-        }}
-      >
+  return (
+    <Stack
+      screenOptions={{
+        headerShown: false,
+        animation: "slide_from_right",
+      }}
+    >
+      {!user ? (
         <Stack.Screen name="sellingInstructions" />
-      </Stack>
-    );
-  } else {
-    return (
-      <Stack
-        screenOptions={{
-          headerShown: false,
-          animation: "slide_from_right",
-        }}
-      >
+      ) : (
         <Stack.Screen name="index" />
-      </Stack>
-    );
-  }
+      )}
+    </Stack>
+  );
 }

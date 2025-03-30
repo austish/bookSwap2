@@ -1,4 +1,3 @@
-// (tabs)/account/index.tsx
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import {
   ScrollView,
@@ -18,6 +17,7 @@ import DropDown from "@/components/DropDown";
 import { StyleSheet } from "react-native";
 import { COLORS, SIZES } from "@/constants/theme";
 import { router } from "expo-router";
+import { useAuth } from "@/context/AuthContext";
 
 interface UserData {
   name: string;
@@ -28,14 +28,8 @@ interface UserData {
   isAdmin?: boolean;
 }
 
-type RootStackParamList = {
-  MainTabs: undefined;
-  Admin: undefined;
-  Cart: undefined;
-  CreateListing: undefined;
-};
-
 export default function AccountScreen() {
+  const { user, isLoading: authLoading } = useAuth();
   const [currentMenu, setCurrentMenu] = useState<string | null>(null);
   const [userData, setUserData] = useState<UserData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -44,16 +38,15 @@ export default function AccountScreen() {
 
   const fetchUserData = useCallback(async () => {
     try {
-      const currentUser = auth.currentUser;
-      if (currentUser) {
-        const userRef = doc(db, "users", currentUser.uid);
+      if (user) {
+        const userRef = doc(db, "users", user.uid);
         const userDoc = await getDoc(userRef);
 
         if (userDoc.exists()) {
           const data = userDoc.data();
           setUserData({
             name: data?.displayName || "User",
-            email: currentUser.email || "No email",
+            email: user.email || "No email",
             phoneNumber: data?.phoneNumber || null,
             numOfPurchases: data?.numOfPurchases || 0,
             numOfSales: data?.numOfSales || 0,
@@ -61,8 +54,8 @@ export default function AccountScreen() {
           });
         } else {
           setUserData({
-            name: currentUser.displayName || "User",
-            email: currentUser.email || "No email",
+            name: user.displayName || "User",
+            email: user.email || "No email",
             phoneNumber: null,
             numOfPurchases: 0,
             numOfSales: 0,
@@ -96,6 +89,9 @@ export default function AccountScreen() {
           onPress: async () => {
             try {
               await auth.signOut();
+              setTimeout(() => {
+                router.replace("/(tabs)/account/login");
+              }, 100);
               console.log("User signed out successfully");
             } catch (error) {
               console.error("Error signing out:", error);

@@ -2,10 +2,9 @@
 import React from 'react';
 import {View, Text, TouchableOpacity, SafeAreaView, StyleSheet} from 'react-native';
 import {FlatList} from 'react-native-gesture-handler';
-import {useNavigation} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {COLORS, SIZES} from '@/constants/theme';
-
+import { router } from 'expo-router';
 
 interface CartItem {
   id: string;
@@ -15,7 +14,6 @@ interface CartItem {
 }
 
 export default function CartScreen() {
-  const navigation = useNavigation();
   const [cartItems, setCartItems] = React.useState<CartItem[]>([]);
 
   const renderEmptyCart = () => (
@@ -54,7 +52,7 @@ export default function CartScreen() {
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity
-          onPress={() => navigation.goBack()}
+          onPress={() => router.back()}
           style={styles.backButton}>
           <Icon name="chevron-left" size={24} />
         </TouchableOpacity>

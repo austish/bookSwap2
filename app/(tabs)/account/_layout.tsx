@@ -1,29 +1,33 @@
-import { Stack } from "expo-router";
+import { router, Stack } from "expo-router";
 import React, { useState, useEffect } from "react";
-import { auth } from "@/firebaseConfig";
+import { useAuth } from "@/context/AuthContext";
 import { onAuthStateChanged } from "firebase/auth";
+import { ActivityIndicator, View } from "react-native";
 
 export default function AccountLayout() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [initializing, setInitializing] = useState(true);
+  const { user, isLoading } = useAuth();
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setIsLoggedIn(!!user);
-      if (initializing) {
-        setInitializing(false);
+    if (!isLoading) {
+      if (!user) {
+        router.replace("/(tabs)/account/signup");
+      } else {
+        router.replace("/(tabs)/account");
       }
-    });
-    return unsubscribe;
-  }, [initializing]);
+    }
+  }, [user, isLoading]);
 
-  // Don't render anything while checking auth state
-  if (initializing) {
-    return null;
+  // Show loading indicator while auth state is being determined
+  if (isLoading) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator size="large" />
+      </View>
+    );
   }
 
   // Conditionally prepare the screens based on login state
-  if (!isLoggedIn) {
+  if (!user) {
     return (
       <Stack
         screenOptions={{
