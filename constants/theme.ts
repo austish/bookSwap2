@@ -7,6 +7,7 @@ export const COLORS = {
   gray: "#666666",
   lightGray: "#E5E5E5",
   success: "#4CAF50",
+  error: "#F44336",
 };
 
 export const SIZES = {

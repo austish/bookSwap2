@@ -1,4 +1,3 @@
-// app/(tabs)/buy/index.tsx
 import React, { useState, useEffect, useRef } from "react";
 import { StyleSheet, Dimensions } from "react-native";
 import {
@@ -27,6 +26,7 @@ import {
   orderBy,
 } from "firebase/firestore";
 import { db } from "@/firebaseConfig";
+import { useCart } from "@/context/CartContext";
 
 interface Book {
   isbn: string;
@@ -45,6 +45,7 @@ export default function BuyScreen() {
   const lastVisibleRef = useRef<any>(null);
   const [hasMoreBooks, setHasMoreBooks] = useState(true);
   const isInitialMount = useRef(true);
+  const { getItemCount } = useCart();
 
   const BOOKS_PER_PAGE = 10;
 
@@ -285,6 +286,11 @@ export default function BuyScreen() {
             style={styles.cartContainer}
           >
             <Icon name="cart" size={28} color={COLORS.secondary} />
+            {getItemCount() > 0 && (
+              <View style={styles.cartBadge}>
+                <Text style={styles.cartBadgeText}>{getItemCount()}</Text>
+              </View>
+            )}
           </TouchableOpacity>
         </View>
       </View>
@@ -346,6 +352,27 @@ const { width } = Dimensions.get("window");
 const cardWidth = (width - SIZES.padding.screen * 2 - SIZES.padding.medium) / 2;
 
 const styles = StyleSheet.create({
+  cartContainer: {
+    padding: SIZES.padding.small,
+    position: 'relative',
+  },
+  cartBadge: {
+    position: 'absolute',
+    right: 0,
+    top: 0,
+    backgroundColor: COLORS.error,
+    borderRadius: 12,
+    minWidth: 18,
+    height: 18,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 4,
+  },
+  cartBadgeText: {
+    color: COLORS.white,
+    fontSize: 12,
+    fontWeight: 'bold',
+  },
   container: {
     flex: 1,
     backgroundColor: COLORS.primary,
@@ -369,9 +396,6 @@ const styles = StyleSheet.create({
   ordersContainer: {
     padding: SIZES.padding.small,
     marginRight: SIZES.padding.medium,
-  },
-  cartContainer: {
-    padding: SIZES.padding.small,
   },
   searchContainer: {
     paddingHorizontal: SIZES.padding.medium,

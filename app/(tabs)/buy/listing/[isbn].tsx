@@ -28,8 +28,10 @@ import {
   getSubjectLabel,
   getConditionLabel,
 } from "@/types/bookOptions";
-import {StyleSheet} from 'react-native';
-import {COLORS, SIZES} from '@/constants/theme';
+import { StyleSheet } from "react-native";
+import { COLORS, SIZES } from "@/constants/theme";
+import { useCart } from "@/context/CartContext";
+import { Toast } from "@/components/Toast";
 
 interface Listing {
   id: string;
@@ -62,7 +64,6 @@ interface BookData {
 export default function BookDetailsScreen() {
   const params = useLocalSearchParams();
   const isbn = params.isbn as string;
-
   const [loading, setLoading] = useState(true);
   const [conditionGroups, setConditionGroups] = useState<ConditionGroup[]>([]);
   const [book, setBook] = useState<BookData>({
@@ -76,6 +77,9 @@ export default function BookDetailsScreen() {
     subject: "",
     type: "",
   });
+  const [showToast, setToastVisible] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
+  const { addToCart } = useCart();
 
   useEffect(() => {
     // Fetch the book data and listings
@@ -178,11 +182,44 @@ export default function BookDetailsScreen() {
     router.back();
   };
 
-  const handleAddToCart = (listingId: string) => {
-    // Implement add to cart functionality
-    console.log("Adding listing to cart:", listingId);
-    // You could navigate to cart or show a confirmation
-    // router.push('/cart');
+  const handleAddToCart = async (listingId: string) => {
+    try {
+      // Find the condition group that contains this listing
+      const group = conditionGroups.find((g) => g.listingId === listingId);
+
+      if (!group) {
+        console.error("Listing not found in condition groups");
+        return;
+      }
+
+      // Get full listing details
+      const listingRef = doc(db, "listings", listingId);
+      const listingDoc = await getDoc(listingRef);
+
+      if (!listingDoc.exists()) {
+        console.error("Listing document not found");
+        return;
+      }
+
+      // Add to cart with book details + listing details
+      addToCart({
+        id: listingId,
+        isbn: book.isbn,
+        title: book.title,
+        coverUrl: book.coverUrl,
+        condition: group.condition,
+        price: group.lowestPrice,
+        sellerId: listingDoc.data().sellerId,
+      });
+
+      // Show success toast
+      setToastMessage(`Added "${book.title}" to cart`);
+      setToastVisible(true);
+    } catch (error) {
+      console.error("Error adding to cart:", error);
+      setToastMessage("Failed to add item to cart");
+      setToastVisible(true);
+    }
   };
 
   if (loading) {
@@ -314,190 +351,197 @@ export default function BookDetailsScreen() {
           </View>
         </View>
       </ScrollView>
+
+      {showToast && (
+        <Toast
+          message={toastMessage}
+          type="success"
+          onClose={() => setToastVisible(false)}
+        />
+      )}
     </SafeAreaView>
   );
-};
+}
 
 const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: COLORS.white,
-    },
-    loadingContainer: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-      backgroundColor: COLORS.white,
-    },
-    loadingText: {
-      marginTop: 10,
-      color: COLORS.gray,
-      fontSize: SIZES.fontSize.medium,
-    },
-    header: {
-      height: 60,
-      flexDirection: 'row',
-      alignItems: 'center',
-      paddingHorizontal: SIZES.padding.medium,
-      borderBottomWidth: 1,
-      borderBottomColor: COLORS.lightGray,
-    },
-    backButton: {
-      padding: 8,
-      color: COLORS.primary,
-    },
-    headerTitle: {
-      color: COLORS.primary,
-      fontSize: SIZES.fontSize.large,
-      fontWeight: '600',
-      marginLeft: SIZES.padding.small,
-    },
-    scrollView: {
-      flex: 1,
-    },
-    bookHeader: {
-      flexDirection: 'row',
-      padding: SIZES.padding.screen,
-      borderBottomWidth: 1,
-      borderBottomColor: COLORS.lightGray,
-    },
-    coverImage: {
-      width: 120,
-      height: 180,
-      borderRadius: 8,
-    },
-    bookInfo: {
-      flex: 1,
-      marginLeft: SIZES.padding.medium,
-      justifyContent: 'flex-start',
-    },
-    title: {
-      fontSize: SIZES.fontSize.large,
-      fontWeight: 'bold',
-      color: COLORS.primary,
-      marginBottom: 5,
-    },
-    author: {
-      fontSize: SIZES.fontSize.medium,
-      color: COLORS.gray,
-      marginBottom: 10,
-    },
-    pricingContainer: {
-      marginBottom: 10,
-      marginTop: 'auto',
-    },
-    price: {
-      fontSize: SIZES.fontSize.large,
-      fontWeight: 'bold',
-      color: COLORS.primary,
-    },
-    lowestPrice: {
-      fontSize: SIZES.fontSize.small,
-      color: COLORS.gray,
-    },
-    badgesContainer: {
-      flexDirection: 'row',
-      flexWrap: 'wrap',
-    },
-    badge: {
-      backgroundColor: COLORS.lightGray,
-      borderRadius: 12,
-      paddingVertical: 4,
-      paddingHorizontal: 8,
-      marginRight: 8,
-      marginBottom: 4,
-    },
-    badgeText: {
-      fontSize: SIZES.fontSize.small,
-      color: COLORS.gray,
-    },
-    addToCartButton: {
-      backgroundColor: COLORS.primary,
-      flexDirection: 'row',
-      justifyContent: 'center',
-      alignItems: 'center',
-      borderRadius: SIZES.borderRadius.large,
-      height: SIZES.height.button,
-      marginHorizontal: SIZES.padding.screen,
-      marginVertical: SIZES.padding.medium,
-    },
-    addToCartButtonText: {
-      color: COLORS.white,
-      fontWeight: 'bold',
-      fontSize: SIZES.fontSize.medium,
-      marginLeft: 8,
-    },
-    section: {
-      padding: SIZES.padding.screen,
-      borderBottomWidth: 1,
-      borderBottomColor: COLORS.lightGray,
-    },
-    sectionTitle: {
-      fontSize: SIZES.fontSize.large,
-      fontWeight: 'bold',
-      color: COLORS.primary,
-      marginBottom: SIZES.padding.medium,
-    },
-    detailRow: {
-      flexDirection: 'row',
-      paddingVertical: 6,
-    },
-    detailLabel: {
-      width: 140,
-      fontSize: SIZES.fontSize.medium,
-      fontWeight: '600',
-      color: COLORS.gray,
-    },
-    detailValue: {
-      flex: 1,
-      fontSize: SIZES.fontSize.medium,
-      color: COLORS.black,
-    },
-    // New styles for condition cards
-    conditionCard: {
-      backgroundColor: COLORS.white,
-      borderRadius: 8,
-      marginBottom: 12,
-      borderWidth: 1,
-      borderColor: COLORS.lightGray,
-      overflow: 'hidden',
-    },
-    conditionHeader: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      padding: SIZES.padding.medium,
-      borderBottomWidth: 1,
-      borderBottomColor: COLORS.lightGray,
-    },
-    conditionLabel: {
-      fontSize: SIZES.fontSize.medium,
-      fontWeight: '600',
-      color: COLORS.black,
-    },
-    conditionPrice: {
-      fontSize: SIZES.fontSize.large,
-      fontWeight: 'bold',
-      color: COLORS.black,
-    },
-    conditionAddButton: {
-      backgroundColor: COLORS.secondary,
-      flexDirection: 'row',
-      justifyContent: 'center',
-      alignItems: 'center',
-      padding: SIZES.padding.small,
-    },
-    conditionAddButtonText: {
-      color: COLORS.white,
-      fontWeight: 'bold',
-      fontSize: SIZES.fontSize.medium,
-      marginLeft: 5,
-    },
-    noListingsText: {
-      fontSize: SIZES.fontSize.medium,
-      color: COLORS.gray,
-      textAlign: 'center',
-      marginVertical: SIZES.padding.medium,
-    },
-  });
-  
+  container: {
+    flex: 1,
+    backgroundColor: COLORS.white,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: COLORS.white,
+  },
+  loadingText: {
+    marginTop: 10,
+    color: COLORS.gray,
+    fontSize: SIZES.fontSize.medium,
+  },
+  header: {
+    height: 60,
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: SIZES.padding.medium,
+    borderBottomWidth: 1,
+    borderBottomColor: COLORS.lightGray,
+  },
+  backButton: {
+    padding: 8,
+    color: COLORS.primary,
+  },
+  headerTitle: {
+    color: COLORS.primary,
+    fontSize: SIZES.fontSize.large,
+    fontWeight: "600",
+    marginLeft: SIZES.padding.small,
+  },
+  scrollView: {
+    flex: 1,
+  },
+  bookHeader: {
+    flexDirection: "row",
+    padding: SIZES.padding.screen,
+    borderBottomWidth: 1,
+    borderBottomColor: COLORS.lightGray,
+  },
+  coverImage: {
+    width: 120,
+    height: 180,
+    borderRadius: 8,
+  },
+  bookInfo: {
+    flex: 1,
+    marginLeft: SIZES.padding.medium,
+    justifyContent: "flex-start",
+  },
+  title: {
+    fontSize: SIZES.fontSize.large,
+    fontWeight: "bold",
+    color: COLORS.primary,
+    marginBottom: 5,
+  },
+  author: {
+    fontSize: SIZES.fontSize.medium,
+    color: COLORS.gray,
+    marginBottom: 10,
+  },
+  pricingContainer: {
+    marginBottom: 10,
+    marginTop: "auto",
+  },
+  price: {
+    fontSize: SIZES.fontSize.large,
+    fontWeight: "bold",
+    color: COLORS.primary,
+  },
+  lowestPrice: {
+    fontSize: SIZES.fontSize.small,
+    color: COLORS.gray,
+  },
+  badgesContainer: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+  },
+  badge: {
+    backgroundColor: COLORS.lightGray,
+    borderRadius: 12,
+    paddingVertical: 4,
+    paddingHorizontal: 8,
+    marginRight: 8,
+    marginBottom: 4,
+  },
+  badgeText: {
+    fontSize: SIZES.fontSize.small,
+    color: COLORS.gray,
+  },
+  addToCartButton: {
+    backgroundColor: COLORS.primary,
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: SIZES.borderRadius.large,
+    height: SIZES.height.button,
+    marginHorizontal: SIZES.padding.screen,
+    marginVertical: SIZES.padding.medium,
+  },
+  addToCartButtonText: {
+    color: COLORS.white,
+    fontWeight: "bold",
+    fontSize: SIZES.fontSize.medium,
+    marginLeft: 8,
+  },
+  section: {
+    padding: SIZES.padding.screen,
+    borderBottomWidth: 1,
+    borderBottomColor: COLORS.lightGray,
+  },
+  sectionTitle: {
+    fontSize: SIZES.fontSize.large,
+    fontWeight: "bold",
+    color: COLORS.primary,
+    marginBottom: SIZES.padding.medium,
+  },
+  detailRow: {
+    flexDirection: "row",
+    paddingVertical: 6,
+  },
+  detailLabel: {
+    width: 140,
+    fontSize: SIZES.fontSize.medium,
+    fontWeight: "600",
+    color: COLORS.gray,
+  },
+  detailValue: {
+    flex: 1,
+    fontSize: SIZES.fontSize.medium,
+    color: COLORS.black,
+  },
+  // New styles for condition cards
+  conditionCard: {
+    backgroundColor: COLORS.white,
+    borderRadius: 8,
+    marginBottom: 12,
+    borderWidth: 1,
+    borderColor: COLORS.lightGray,
+    overflow: "hidden",
+  },
+  conditionHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: SIZES.padding.medium,
+    borderBottomWidth: 1,
+    borderBottomColor: COLORS.lightGray,
+  },
+  conditionLabel: {
+    fontSize: SIZES.fontSize.medium,
+    fontWeight: "600",
+    color: COLORS.black,
+  },
+  conditionPrice: {
+    fontSize: SIZES.fontSize.large,
+    fontWeight: "bold",
+    color: COLORS.black,
+  },
+  conditionAddButton: {
+    backgroundColor: COLORS.secondary,
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: SIZES.padding.small,
+  },
+  conditionAddButtonText: {
+    color: COLORS.white,
+    fontWeight: "bold",
+    fontSize: SIZES.fontSize.medium,
+    marginLeft: 5,
+  },
+  noListingsText: {
+    fontSize: SIZES.fontSize.medium,
+    color: COLORS.gray,
+    textAlign: "center",
+    marginVertical: SIZES.padding.medium,
+  },
+});
