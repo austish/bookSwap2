@@ -6,6 +6,7 @@ import { useEffect } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { AuthProvider } from "@/context/AuthContext";
 import { CartProvider } from "@/context/CartContext";
+import { StripeProvider } from "@stripe/stripe-react-native";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -28,13 +29,15 @@ export default function RootLayout() {
   return (
     <AuthProvider>
       <CartProvider>
-        <GestureHandlerRootView style={{ flex: 1 }}>
-          <Stack>
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-            <Stack.Screen name="+not-found" />
-          </Stack>
-          <StatusBar style="auto" />
-        </GestureHandlerRootView>
+        <StripeProvider publishableKey="pk_test_51R8uTJ060yEsWVPxqJ6uWIiDr8XK1aTLrei6KhnygEty4TGvLbgvP0jePPbiDbBkKetklS0l7BaUgVaT2H9nu46A00wOCRMPFm">
+          <GestureHandlerRootView style={{ flex: 1 }}>
+            <Stack>
+              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+              <Stack.Screen name="+not-found" />
+            </Stack>
+            <StatusBar style="auto" />
+          </GestureHandlerRootView>
+        </StripeProvider>
       </CartProvider>
     </AuthProvider>
   );

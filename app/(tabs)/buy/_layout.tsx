@@ -12,6 +12,12 @@ export default function BuyLayout() {
     >
       <Stack.Screen name="index" />
       <Stack.Screen
+        name="checkout"
+        options={{
+          presentation: "card",
+        }}
+      />
+      <Stack.Screen
         name="cart"
         options={{
           presentation: "card",

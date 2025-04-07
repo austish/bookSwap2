@@ -53,7 +53,7 @@ interface ListingWithBook extends Listing {
 
 const ListingManager: React.FC<ListingManagerProps> = ({ userId, isAdmin = 'false' }) => {
   const [activeTab, setActiveTab] = useState<TabType>("Active");
-  const [searchQuery, setSearchQuery] = useState("");
+//   const [searchQuery, setSearchQuery] = useState("");
   const [listings, setListings] = useState<ListingWithBook[]>([]);
   const [loading, setLoading] = useState(true);
   const [isUserAdmin, setIsUserAdmin] = useState(false);
@@ -204,11 +204,11 @@ const ListingManager: React.FC<ListingManagerProps> = ({ userId, isAdmin = 'fals
   const getDisplayedListings = () => {
     const filteredListings = getFilteredListings(activeTab);
 
-    if (searchQuery) {
-      return filteredListings.filter((listing) =>
-        listing.title.toLowerCase().includes(searchQuery.toLowerCase())
-      );
-    }
+    // if (searchQuery) {
+    //   return filteredListings.filter((listing) =>
+    //     listing.title.toLowerCase().includes(searchQuery.toLowerCase())
+    //   );
+    // }
 
     return filteredListings;
   };
@@ -369,7 +369,7 @@ const ListingManager: React.FC<ListingManagerProps> = ({ userId, isAdmin = 'fals
             ))}
           </View>
 
-          <View style={styles.searchContainer}>
+          {/* <View style={styles.searchContainer}>
             <Icon name="magnify" size={20} color={COLORS.gray} />
             <TextInput
               style={styles.searchInput}
@@ -378,7 +378,7 @@ const ListingManager: React.FC<ListingManagerProps> = ({ userId, isAdmin = 'fals
               onChangeText={setSearchQuery}
               placeholderTextColor={COLORS.gray}
             />
-          </View>
+          </View> */}
 
           {renderListings()}
         </View>

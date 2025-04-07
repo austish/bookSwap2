@@ -50,7 +50,7 @@ export default function BuyScreen() {
   const BOOKS_PER_PAGE = 10;
 
   const handleMyOrdersPress = () => {
-    router.push("/sell");
+    router.push("/buy/orders");
   };
 
   const handleRefresh = async () => {
@@ -319,9 +319,26 @@ export default function BuyScreen() {
             <ActivityIndicator size="large" color={COLORS.secondary} />
           </View>
         ) : filteredBooks.length === 0 ? (
-          <View style={styles.emptyContainer}>
-            <Text style={styles.emptyText}>No books found</Text>
-          </View>
+          <FlatList
+            data={[]}
+            renderItem={() => null}
+            ListEmptyComponent={() => (
+              <View style={styles.emptyContainer}>
+                <Text style={styles.emptyText}>No books found</Text>
+              </View>
+            )}
+            contentContainerStyle={[
+              styles.booksList,
+              { flex: 1, justifyContent: "center" },
+            ]}
+            refreshControl={
+              <RefreshControl
+                refreshing={refreshing}
+                onRefresh={handleRefresh}
+                tintColor={COLORS.gray}
+              />
+            }
+          />
         ) : (
           <FlatList
             data={filteredBooks}
@@ -354,24 +371,24 @@ const cardWidth = (width - SIZES.padding.screen * 2 - SIZES.padding.medium) / 2;
 const styles = StyleSheet.create({
   cartContainer: {
     padding: SIZES.padding.small,
-    position: 'relative',
+    position: "relative",
   },
   cartBadge: {
-    position: 'absolute',
+    position: "absolute",
     right: 0,
     top: 0,
     backgroundColor: COLORS.error,
     borderRadius: 12,
     minWidth: 18,
     height: 18,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     paddingHorizontal: 4,
   },
   cartBadgeText: {
     color: COLORS.white,
     fontSize: 12,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   container: {
     flex: 1,

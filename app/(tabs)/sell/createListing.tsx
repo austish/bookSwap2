@@ -139,7 +139,6 @@ export default function CreateListingScreen() {
           console.log("Book data:", bookData);
           const subjects = bookData.subjects || [];
           const classification = classifyBook(subjects);
-          console.log(classification);
 
           // Store book information
           const bookInfo: BookInfo = {
@@ -281,7 +280,6 @@ export default function CreateListingScreen() {
         // Add the listing document
         const listingRef = doc(db, "listings", listingId);
         await setDoc(listingRef, listingDoc);
-        console.log("Listing created:", listingDoc);
 
         await runTransaction(db, async (transaction) => {
           if (!userDoc.exists) {
