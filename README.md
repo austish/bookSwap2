@@ -1,6 +1,6 @@
 # BookSwap 📚
 
-BookSwap is a book marketplace app designed specifically for UCSB students to buy and sell books. Built with React Native (Expo) for the frontend and Firebase (Auth, Firestore, Storage) for the backend. Future development plans include expanding access to Android and more college campuses. 
+BookSwap is a book marketplace app designed specifically for UCSB students to buy and sell books. Built with React Native (Expo) for the frontend and Firebase (Auth, Firestore) for the backend. Future development plans include expanding access to Android and more college campuses. 
 
 ## Screenshots
 
