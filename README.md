@@ -1,12 +1,17 @@
 # BookSwap 📚
 
-BookSwap is a book marketplace app designed specifically for UCSB students to buy and sell books. Built with React Native (Expo) for the frontend and Firebase (Auth, Firestore, Storage) for the backend.
+BookSwap is a book marketplace app designed specifically for UCSB students to buy and sell books. Built with React Native (Expo) for the frontend and Firebase (Auth, Firestore, Storage) for the backend. Future development plans include expanding access to Android and more college campuses. 
 
 ## Screenshots
 
 | Buy | Listing Page | Sell |
 |-----|-----|-----|
-| ![Buy Screen](./assets/screenshots/buy.png) | ![Listing Page](./assets/screenshots/bookListing.png) | ![Sell](./assets/screenshots/sell.png) |
+| <img src="./assets/screenshots/buy.png" width="300"/> | <img src="./assets/screenshots/bookListing.png" width="300"/> | <img src="./assets/screenshots/sell.png" width="300"/> |
+
+
+| Cart | Checkout | Account |
+|-----|-----|-----|
+| <img src="./assets/screenshots/cart.png" width="300"/> | <img src="./assets/screenshots/checkout.png" width="300"/> | <img src="./assets/screenshots/account.png" width="300"/> |
 
 
 ## Setup
@@ -58,6 +63,9 @@ In the output, you'll find options to open the app in a
 5. Fix selling instructions
 6. Redo account submenus
 7. Unify styling 
-8. going back from book listing after coming from sell page takes you to buy page
-9. Remove books with no listings (if necessary)
-10. Limit pending + active listings to 10 (if necessary)
+8. Remove books with no listings (if necessary)
+9. Limit pending + active listings to 10 (if necessary)
+
+## Bugs 
+
+- going back from book listing after coming from sell page takes you to buy page
