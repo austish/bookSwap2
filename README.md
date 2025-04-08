@@ -2,15 +2,33 @@
 
 BookSwap is a book marketplace app designed specifically for UCSB students to buy and sell books. Built with React Native (Expo) for the frontend and Firebase (Auth, Firestore, Storage) for the backend.
 
-## Get started
+## Screenshots
 
-1. Install dependencies
+| Buy | Sell | Account |
+|------|--------------|---------------------|
+| ![Buy Screen](./assets/screenshots/buy.png) | ![Sell](./assets/screenshots/sell.png) | ![Listing Page](./assets/screenshots/bookListing.png) |
+
+## Setup
+
+1. Clone the repo
+   ```bash
+   git clone https://github.com/your-username/bookswap.git
+   cd bookswap
+   ```
+
+2. Install dependencies
 
    ```bash
    npm install
    ```
 
-2. Start the app
+3. Set up Firebase
+   
+   - Create a new Firebase project at [Firebase Console](https://console.firebase.google.com/u/0/)
+   - Enable Firestore, Firebase Auth, and Storage
+   - Copy your Firebase config into firebaseConfig.ts
+
+5. Start the app
 
    ```bash
     npx expo start
@@ -23,28 +41,20 @@ In the output, you'll find options to open the app in a
 - [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
 - [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+## Major To-do
 
-## Get a fresh project
+1. Stripe implementation
+2. Redo admin page
+    - check book drop offs, book pickups
 
-When you're ready, run:
+## Minor To-do
 
-```bash
-npm run reset-project
-```
-
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+1. Pricing details when listing
+2. Do not allow users to buy books they have a listing for
+3. Come up with process of holding/returning books
+    - account strikes for when users fail to deliver/pickup
+4. Fix page animation after log in/out
+5. Fix selling instructions
+6. Redo account submenus
+7. Remove books with no listings (if necessary)
+8. Limit pending + active listings to 10 (if necessary)

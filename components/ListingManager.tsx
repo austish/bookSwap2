@@ -103,7 +103,7 @@ const ListingManager: React.FC<ListingManagerProps> = ({ userId, isAdmin = 'fals
 
     const userRef = doc(db, "users", targetUserId);
     const userListener = onSnapshot(userRef, async (userDoc) => {
-      if (!userDoc.exists) {
+      if (!userDoc.exists()) {
         setLoading(false);
         return;
       }
@@ -119,7 +119,7 @@ const ListingManager: React.FC<ListingManagerProps> = ({ userId, isAdmin = 'fals
       listingIds.forEach((listingId: string) => {
         const listingRef = doc(db, "listings", listingId);
         const listingListener = onSnapshot(listingRef, async (listingDoc) => {
-          if (!listingDoc.exists) {
+          if (!listingDoc.exists()) {
             return;
           }
 

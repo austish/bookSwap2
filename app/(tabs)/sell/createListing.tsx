@@ -136,7 +136,6 @@ export default function CreateListingScreen() {
         if (bookData) {
           setIsIsbnValid(true);
           setErrors((prev) => ({ ...prev, isbn: "" }));
-          console.log("Book data:", bookData);
           const subjects = bookData.subjects || [];
           const classification = classifyBook(subjects);
 
@@ -233,7 +232,7 @@ export default function CreateListingScreen() {
       const bookSnapshot = await getDoc(bookRef);
 
       // Only create a new book document if one doesn't exist
-      if (!bookSnapshot.exists) {
+      if (!bookSnapshot.exists()) {
         const bookDoc: BookDocument = {
           isbn: formData.bookInfo?.isbn || "",
           title: formData.bookInfo?.title || "Unknown Title",
@@ -256,44 +255,43 @@ export default function CreateListingScreen() {
         await updateDoc(bookRef, {
           listingIds: [...bookSnapshot.data()?.listingIds, listingId],
         });
-
-        const userRef = doc(db, "users", currentUser.uid);
-        const userDoc = await getDoc(userRef);
-        const displayName = userDoc.data()?.displayName;
-
-        // Create the listing document
-        const listingDoc: ListingDocument = {
-          listingId,
-          sellerId: currentUser.uid,
-          sellerName: displayName || "Unknown Seller",
-          sellerEmail: currentUser.email || "Unknown Email",
-          condition: formData.condition,
-          notes: formData.notes || "",
-          price: parseFloat(formData.price),
-          createdAt: new Date(),
-          expiresAt: null,
-          status: "active",
-          isbn: formData.bookInfo?.isbn || "",
-          title: formData.bookInfo?.title || "Unknown Title",
-        };
-
-        // Add the listing document
-        const listingRef = doc(db, "listings", listingId);
-        await setDoc(listingRef, listingDoc);
-
-        await runTransaction(db, async (transaction) => {
-          if (!userDoc.exists) {
-            throw new Error("User document not found");
-          }
-
-          const userData = userDoc.data();
-          const listingIds = userData?.listingIds || [];
-
-          transaction.update(userRef, {
-            listingIds: [...listingIds, listingId],
-          });
-        });
       }
+      const userRef = doc(db, "users", currentUser.uid);
+      const userDoc = await getDoc(userRef);
+      const displayName = userDoc.data()?.displayName;
+
+      // Create the listing document
+      const listingDoc: ListingDocument = {
+        listingId,
+        sellerId: currentUser.uid,
+        sellerName: displayName || "Unknown Seller",
+        sellerEmail: currentUser.email || "Unknown Email",
+        condition: formData.condition,
+        notes: formData.notes || "",
+        price: parseFloat(formData.price),
+        createdAt: new Date(),
+        expiresAt: null,
+        status: "active",
+        isbn: formData.bookInfo?.isbn || "",
+        title: formData.bookInfo?.title || "Unknown Title",
+      };
+
+      // Add the listing document
+      const listingRef = doc(db, "listings", listingId);
+      await setDoc(listingRef, listingDoc);
+
+      await runTransaction(db, async (transaction) => {
+        if (!userDoc.exists()) {
+          throw new Error("User document not found");
+        }
+
+        const userData = userDoc.data();
+        const listingIds = userData?.listingIds || [];
+
+        transaction.update(userRef, {
+          listingIds: [...listingIds, listingId],
+        });
+      });
 
       // Show success message before navigating
       Alert.alert(

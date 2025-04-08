@@ -168,7 +168,7 @@ async function updateOrderAfterPayment(orderId) {
   const orderRef = db.collection("orders").doc(orderId);
   const orderDoc = await orderRef.get();
 
-  if (!orderDoc.exists) {
+  if (!orderDoc.exists()) {
     console.error(`Order ${orderId} not found`);
     return;
   }
@@ -204,7 +204,7 @@ async function updateOrderAfterPayment(orderId) {
   const userRef = db.collection("users").doc(orderData.buyerId);
   const userDoc = await userRef.get();
 
-  if (userDoc.exists) {
+  if (userDoc.exists()) {
     const userData = userDoc.data();
     batch.update(userRef, {
       purchaseIds: admin.firestore.FieldValue.arrayUnion(orderId),

@@ -53,7 +53,7 @@ export default function EditListingScreen() {
         const listingRef = doc(db, 'listings', listingId);
         const listingDoc = await getDoc(listingRef);
 
-        if (!listingDoc.exists) {
+        if (!listingDoc.exists()) {
           Alert.alert('Error', 'Listing not found');
           router.back();
           return;

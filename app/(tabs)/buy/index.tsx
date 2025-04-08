@@ -131,7 +131,7 @@ export default function BuyScreen() {
               const listingRef = doc(db, "listings", listingId);
               const listingDoc = await getDoc(listingRef);
 
-              if (!listingDoc.exists) {
+              if (!listingDoc.exists()) {
                 return null;
               }
 
