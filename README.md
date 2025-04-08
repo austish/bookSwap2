@@ -1,6 +1,6 @@
-# Welcome to your Expo app 👋
+# BookSwap 📚
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+BookSwap is a book marketplace app designed specifically for UCSB students to buy and sell books. Built with React Native (Expo) for the frontend and Firebase (Auth, Firestore, Storage) for the backend.
 
 ## Get started
 
