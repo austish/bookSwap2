@@ -261,15 +261,6 @@ export default function CheckoutScreen() {
     <View>
       {renderOrderSummary(true)}
 
-      {/* <View style={styles.confirmationSection}>
-        <Text style={styles.confirmationSectionTitle}>Payment Method:</Text>
-        <Text style={styles.confirmationText}>
-          {paymentMethod === "venmo"
-            ? `Venmo: ${venmoUsername}`
-            : `Zelle: ${zelleInfo}`}
-        </Text>
-      </View> */}
-
       {notes && (
         <View style={styles.confirmationSection}>
           <Text style={styles.confirmationSectionTitle}>Additional Notes:</Text>
@@ -316,12 +307,12 @@ export default function CheckoutScreen() {
         </View>
       </View>
 
-      <View style={styles.note}>
+      {/* <View style={styles.note}>
         <Icon name="information-outline" size={20} color={COLORS.primary} />
         <Text style={styles.noteText}>
           Text
         </Text>
-      </View>
+      </View> */}
     </View>
   );
 
