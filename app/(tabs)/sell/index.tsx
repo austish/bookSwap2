@@ -1,7 +1,5 @@
-// (tabs)/sell/index.tsx
 import React from "react";
 import { View, Text, SafeAreaView, TouchableOpacity } from "react-native";
-import { NavigationProp } from "@react-navigation/native";
 import ListingManager from "@/components/ListingManager";
 import { StyleSheet } from "react-native";
 import { COLORS, SIZES } from "@/constants/theme";
@@ -48,7 +46,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: SIZES.fontSize.title,
     fontWeight: "bold",
-    color: COLORS.black,
+    color: COLORS.primary,
   },
   createButton: {
     backgroundColor: COLORS.primary,

@@ -4,9 +4,10 @@ BookSwap is a book marketplace app designed specifically for UCSB students to bu
 
 ## Screenshots
 
-| Buy | Sell | Account |
-|------|--------------|---------------------|
-| ![Buy Screen](./assets/screenshots/buy.png) | ![Sell](./assets/screenshots/sell.png) | ![Listing Page](./assets/screenshots/bookListing.png) |
+| Buy | Listing Page | Sell |
+|-----|-----|-----|
+| ![Buy Screen](./assets/screenshots/buy.png) | ![Listing Page](./assets/screenshots/bookListing.png) | ![Sell](./assets/screenshots/sell.png) |
+
 
 ## Setup
 
@@ -56,5 +57,7 @@ In the output, you'll find options to open the app in a
 4. Fix page animation after log in/out
 5. Fix selling instructions
 6. Redo account submenus
-7. Remove books with no listings (if necessary)
-8. Limit pending + active listings to 10 (if necessary)
+7. Unify styling 
+8. going back from book listing after coming from sell page takes you to buy page
+9. Remove books with no listings (if necessary)
+10. Limit pending + active listings to 10 (if necessary)

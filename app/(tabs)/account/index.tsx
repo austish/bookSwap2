@@ -397,8 +397,7 @@ const styles = StyleSheet.create({
   },
   header: {
     paddingHorizontal: SIZES.padding.screen,
-    paddingTop: SIZES.padding.small,
-    paddingBottom: SIZES.spacing.vertical.medium,
+    paddingVertical: 16,
   },
   title: {
     fontSize: SIZES.fontSize.title,
